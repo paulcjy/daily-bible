@@ -5,7 +5,7 @@
 .markdown {
   h1 {
     font-size: x-large;
-    padding-top: 0.5rem;
+    padding-top: 2rem;
     padding-bottom: 0rem;
     text-align: center;
     counter-reset: cnt;
