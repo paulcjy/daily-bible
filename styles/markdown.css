@@ -1,0 +1,34 @@
+.markdown {
+    h1 {
+        font-size: x-large;
+        padding-top: 0.5rem;
+        padding-bottom: 0rem;
+        text-align: center;
+        counter-reset: cnt;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 0.8rem;
+        margin-bottom: 0.15rem;
+        font-weight: 600;
+        font-size: small;
+    }
+
+    li {
+        list-style: none;
+        counter-increment: cnt;
+    }
+
+    ol li::before {
+        display: inline-block;
+        position: absolute;
+        left: 1.1rem;
+        content: counter(cnt) " ";
+        font-size: xx-small;
+        vertical-align: top;
+        margin-left: -0.6rem;
+        width: 0.9rem;
+        text-align: right;
+    }
+}
