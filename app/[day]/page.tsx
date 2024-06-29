@@ -1,4 +1,5 @@
-import { allBibles } from 'contentlayer/generated'
+import { Bible, allBibles } from 'contentlayer/generated'
+import { notFound } from 'next/navigation'
 
 export const generateStaticParams = async () =>
   allBibles.map(bible => ({
@@ -7,10 +8,12 @@ export const generateStaticParams = async () =>
 
 export default function BiblePage({ params }: { params: { day: string } }) {
   const bible = allBibles.find(bible => bible.day === params.day)
+  if (!bible) notFound()
+
   return (
     <div
       className='markdown pr-4 pl-6'
-      dangerouslySetInnerHTML={{ __html: bible?.body.html }}
+      dangerouslySetInnerHTML={{ __html: bible.body.html }}
     />
   )
 }
