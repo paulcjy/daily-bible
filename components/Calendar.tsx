@@ -12,23 +12,23 @@ export const Calendar = () => {
   const setDayColor = (idx: number) => `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
 
   return (
-    <div className="display-table border-collapse h-[85vh] w-screen">
-      <div className="table-header-group h-[5vh]">
+    <div className="display-table border-collapse h-[87vh] w-screen">
+      <div className="table-header-group h-[4vh]">
         <div className="table-row">
           {header.map((day, i) => (
             <div key={i} className={`w-[15vw] table-cell border text-center font-bold align-middle ${setDayColor(i)}`}>{day}</div>
           ))}
         </div>
       </div>
-      <div className="table-row-group h-[80vh]">
+      <div className="table-row-group h-[75vh]">
         {july.map((row, i) => (
           <div key={i} className="table-row">
             {row.map((day, i) => (
-              <Link key={i} href={day ? `/${day}` : '#'} className="table-cell border h-[16vh]">
+              <Link key={i} href={day ? `/${day}` : '#'} className="table-cell border">
                 {day ?
                   <div>
                     <div className={`p-1.5 font-bold ${setDayColor(i)}`}>{day}</div>
-                    <div className="p-1 text-[0.65rem]">
+                    <div className="p-1 text-[0.7rem]">
                       <p>출애굽기</p>
                       <p>{exodus[day]}장</p>
                     </div>
