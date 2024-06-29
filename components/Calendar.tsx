@@ -24,7 +24,7 @@ export const Calendar = () => {
         {july.map((row, i) => (
           <div key={i} className="table-row">
             {row.map((day, i) => (
-              <Link key={i} href={day ? `/daily-bible/${day}` : '#'} className="table-cell border h-[16vh]">
+              <Link key={i} href={day ? `/${day}` : '#'} className="table-cell border h-[16vh]">
                 {day ?
                   <div>
                     <div className={`p-1.5 font-bold ${setDayColor(i)}`}>{day}</div>
