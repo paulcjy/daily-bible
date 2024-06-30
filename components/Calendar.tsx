@@ -16,7 +16,7 @@ export const Calendar = () => {
       <div className="table-header-group h-[4vh]">
         <div className="table-row">
           {header.map((day, i) => (
-            <div key={i} className={`w-[15vw] table-cell border text-center font-bold align-middle ${setDayColor(i)}`}>{day}</div>
+            <div key={i} className={`w-[15vw] table-cell border text-center font-bold align-middle sm:text-xl ${setDayColor(i)}`}>{day}</div>
           ))}
         </div>
       </div>
@@ -27,10 +27,10 @@ export const Calendar = () => {
               <Link key={i} href={day ? `/${day}` : '#'} className="table-cell border">
                 {day ?
                   <div>
-                    <div className={`p-1.5 font-bold ${setDayColor(i)}`}>{day}</div>
-                    <div className="p-1 text-[0.7rem]">
-                      <p>출애굽기</p>
-                      <p>{exodus[day]}장</p>
+                    <div className={`p-1.5 sm:p-2 font-bold sm:text-xl ${setDayColor(i)}`}>{day}</div>
+                    <div className="p-1 sm:p-2 text-[0.7rem] sm:text-lg">
+                      <p className="lg:inline">출애굽기</p>
+                      <p className="lg:inline lg:pl-1">{exodus[day]}장</p>
                     </div>
                   </div> :
                   null}

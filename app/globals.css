@@ -9,6 +9,7 @@
     padding-bottom: 0rem;
     text-align: center;
     counter-reset: cnt;
+    @apply lg:text-left;
   }
 
   h2 {
@@ -17,6 +18,7 @@
     margin-bottom: 0.15rem;
     font-weight: 600;
     font-size: small;
+    @apply lg:text-left sm:text-left;
   }
 
   li {
@@ -34,7 +36,10 @@
     margin-left: -0.6rem;
     width: 0.9rem;
     text-align: right;
+    @apply lg:ml-4 sm:ml-4;
   }
+
+  @apply lg:leading-7 lg:ml-8 sm:leading-7 sm:ml-8;
 }
 
 /* :root {
