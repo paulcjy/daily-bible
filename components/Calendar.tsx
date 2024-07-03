@@ -8,7 +8,8 @@ export const Calendar = () => {
   for (let i = julyStartIdx, day = 1; day <= julyDays; i++, day++) july[Math.floor(i / 7)][i % 7] = day
 
   const exodus = [null, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23-24', '25-26', '27-28', '29-30', '31-32', '33-34', '35-36', '37-38', '39-40']
-  const today = new Date();
+  
+  const today = () => new Date.getDate()
 
   const setDayColor = (idx: number) => `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
 
@@ -25,7 +26,7 @@ export const Calendar = () => {
         {july.map((row: number[], i) => (
           <div key={i} className="table-row">
             {row.map((day: number, i) => (
-              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${day === today.getDay() ? 'border-2 border-red-400 bg-red-100/50' : null}`}>
+              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${day === today() ? 'border-2 border-red-400 bg-red-100/50' : null}`}>
                 {day ?
                   <div>
                     <div className={`p-1.5 sm:p-2 font-bold sm:text-xl ${setDayColor(i)}`}>{day}</div>
