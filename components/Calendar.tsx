@@ -9,7 +9,12 @@ export const Calendar = () => {
 
   const exodus = [null, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23-24', '25-26', '27-28', '29-30', '31-32', '33-34', '35-36', '37-38', '39-40']
   
-  const today = () => new Date().getDate()
+  const today = () => {
+    const date = new Date()
+    const UTC = date.getTime() + (date.getTimezoneOffset() * 60 * 1000)
+    const KOR = 9 * 60 * 60 * 1000
+    return new Date(UTC + KOR).getDate()
+  }
 
   const setDayColor = (idx: number) => `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
 
