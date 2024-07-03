@@ -26,7 +26,7 @@ export const Calendar = () => {
         {july.map((row: number[], i) => (
           <div key={i} className="table-row">
             {row.map((day: number, i) => (
-              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${day === today() ? 'border-2 border-red-400 bg-red-100/50' : null}`}>
+              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${day === 4 ? 'border-2 border-red-400 bg-red-100/50' : ''}`}>
                 {day ?
                   <div>
                     <div className={`p-1.5 sm:p-2 font-bold sm:text-xl ${setDayColor(i)}`}>{day}</div>
