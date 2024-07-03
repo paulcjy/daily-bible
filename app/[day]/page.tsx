@@ -12,7 +12,7 @@ export default function BiblePage({ params }: { params: { day: string } }) {
 
   return (
     <div
-      className='markdown pr-4 pl-6'
+      className='markdown pr-4 pl-6 mb-48'
       dangerouslySetInnerHTML={{ __html: bible.body.html }}
     />
   )
