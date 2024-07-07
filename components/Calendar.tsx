@@ -9,7 +9,7 @@ export const Calendar = () => {
 
   const exodus = [null, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23-24', '25-26', '27-28', '29-30', '31-32', '33-34', '35-36', '37-38', '39-40']
   
-  const today = () => {
+  const getToday = () => {
     const date = new Date()
     const UTC = date.getTime() + (date.getTimezoneOffset() * 60 * 1000)
     const KOR = 9 * 60 * 60 * 1000
@@ -17,6 +17,10 @@ export const Calendar = () => {
   }
 
   const setDayColor = (idx: number) => `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
+
+  const setToday = (day: number) => day === getToday() ? 'border-2 border-red-400 bg-red-100/50' : ''
+
+  const setPastDay = (day: number) => day && day < getToday() ? 'bg-zinc-50 opacity-40' : ''
 
   return (
     <div className="display-table border-collapse h-[87vh] w-screen">
@@ -31,7 +35,7 @@ export const Calendar = () => {
         {july.map((row: number[], i) => (
           <div key={i} className="table-row">
             {row.map((day: number, i) => (
-              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${day === today() ? 'border-2 border-red-400 bg-red-100/50' : ''}`}>
+              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${setToday(day)} ${setPastDay(day)}`}>
                 {day ?
                   <div>
                     <div className={`p-1.5 sm:p-2 font-bold sm:text-xl ${setDayColor(i)}`}>{day}</div>
