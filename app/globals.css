@@ -5,8 +5,8 @@
 .markdown {
   h1 {
     font-size: x-large;
-    padding-top: 2rem;
-    padding-bottom: 0rem;
+    margin-top: 2.5rem;
+    margin-bottom: 0.8rem;
     text-align: center;
     counter-reset: cnt;
     @apply lg:text-left;
@@ -30,7 +30,7 @@
     display: inline-block;
     position: absolute;
     left: 1.1rem;
-    content: counter(cnt) " ";
+    content: counter(cnt) ' ';
     font-size: xx-small;
     vertical-align: top;
     margin-left: -0.6rem;

@@ -1,62 +1,160 @@
-import Link from "next/link";
+'use client'
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export const Calendar = () => {
-  const header = ['일', '월', '화', '수', '목', '금', '토']
-  const july: number[][] = Array.from(Array(5), () => Array(7).fill(0))
-  const julyStartIdx = 1;
-  const julyDays = 31;
-  for (let i = julyStartIdx, day = 1; day <= julyDays; i++, day++) july[Math.floor(i / 7)][i % 7] = day
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [calendarDays, setCalendarDays] = useState<(number | null)[][]>([])
 
-  const exodus = [null, '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23-24', '25-26', '27-28', '29-30', '31-32', '33-34', '35-36', '37-38', '39-40']
-  
+  const header = ['일', '월', '화', '수', '목', '금', '토']
+
+  useEffect(() => {
+    const updateCalendar = () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth()
+      const firstDay = new Date(year, month, 1).getDay()
+      const lastDate = new Date(year, month + 1, 0).getDate()
+
+      let days: (number | null)[][] = []
+      let week: (number | null)[] = Array(7).fill(null)
+
+      for (let i = 0; i < firstDay; i++) {
+        week[i] = null
+      }
+
+      for (let day = 1; day <= lastDate; day++) {
+        const weekDay = (firstDay + day - 1) % 7
+        week[weekDay] = day
+
+        if (weekDay === 6 || day === lastDate) {
+          days.push(week)
+          week = Array(7).fill(null)
+        }
+      }
+
+      setCalendarDays(days)
+    }
+
+    updateCalendar()
+  }, [currentDate])
+
   const getToday = () => {
-    const date = new Date()
-    const UTC = date.getTime() + (date.getTimezoneOffset() * 60 * 1000)
-    const KOR = 9 * 60 * 60 * 1000
-    return new Date(UTC + KOR).getDate()
+    const now = new Date()
+    return now.getFullYear() === currentDate.getFullYear() &&
+      now.getMonth() === currentDate.getMonth()
+      ? now.getDate()
+      : -1
   }
 
-  const setDayColor = (idx: number) => `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
+  const setDayColor = (idx: number) =>
+    `${idx === 0 ? 'text-red-500' : ''} ${idx === 6 ? 'text-blue-600' : ''}`
 
-  const setToday = (day: number) => day === getToday() ? 'border-2 border-red-400 bg-red-100/50' : ''
+  const setToday = (day: number | null) =>
+    day === getToday() ? 'bg-blue-100 border-blue-500' : ''
 
-  const setPastDay = (day: number) => day && day < getToday() ? 'bg-zinc-50 opacity-40' : ''
+  const setPastDay = (day: number | null) =>
+    day && day < getToday() ? 'opacity-50' : ''
+
+  const getChapter = (day: number) => {
+    const end = day * 3
+    const begin = end - 2
+    return `시편\n${begin}-${end}`
+  }
+
+  const monthNames = [
+    '1월',
+    '2월',
+    '3월',
+    '4월',
+    '5월',
+    '6월',
+    '7월',
+    '8월',
+    '9월',
+    '10월',
+    '11월',
+    '12월',
+  ]
+
+  const changeMonth = (delta: number) => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + delta, 1)
+    )
+  }
 
   return (
-    <div className="display-table border-collapse h-[87vh] w-screen">
-      <div className="table-header-group h-[4vh]">
-        <div className="table-row">
-          {header.map((day, i) => (
-            <div key={i} className={`w-[15vw] table-cell border text-center font-bold align-middle sm:text-xl ${setDayColor(i)}`}>{day}</div>
-          ))}
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-2 md:p-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="p-2 bg-blue-600 text-white">
+          <h1 className="text-xl md:text-3xl font-bold text-center">
+            주내힘교회 청소년부
+          </h1>
+          <h2 className="text-lg md:text-2xl text-center">성경읽기표</h2>
         </div>
-      </div>
-      <div className="table-row-group h-[75vh]">
-        {july.map((row: number[], i) => (
-          <div key={i} className="table-row">
-            {row.map((day: number, i) => (
-              <Link key={i} href={day ? `/${day}` : '#'} className={`table-cell border ${setToday(day)} ${setPastDay(day)}`}>
-                {day ?
-                  <div>
-                    <div className={`p-1.5 sm:p-2 font-bold sm:text-xl ${setDayColor(i)}`}>{day}</div>
-                    <div className="p-1 sm:p-2 text-[0.7rem] sm:text-lg">
-                      <p className="lg:inline">출애굽기</p>
-                      <p className="lg:inline lg:pl-1">{exodus[day]}장</p>
-                    </div>
-                  </div> :
-                  null}
-              </Link>
+
+        <div className="flex justify-between items-center p-2 bg-blue-500 text-white">
+          <button
+            onClick={() => changeMonth(-1)}
+            className="p-2 hover:bg-blue-600 rounded-full transition-colors"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <h2 className="text-xl font-bold whitespace-pre">
+            {currentDate.getFullYear()}년{' '.repeat(2)}
+            {monthNames[currentDate.getMonth()]}
+          </h2>
+          <button
+            onClick={() => changeMonth(1)}
+            className="p-2 hover:bg-blue-600 rounded-full transition-colors"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
+
+        <div className="p-1.5">
+          <div className="grid grid-cols-7 gap-0 mb-1">
+            {header.map((day, i) => (
+              <div
+                key={i}
+                className={`text-center font-bold p-1 ${setDayColor(i)}`}
+              >
+                {day}
+              </div>
             ))}
           </div>
-        ))}
+
+          <div className="grid grid-cols-7 gap-0">
+            {calendarDays.flat().map((day, index) => (
+              <div
+                key={index}
+                className={`
+                  border p-1 h-24 md:h-32
+                  ${day ? 'hover:shadow-md transition-shadow' : ''}
+                  ${setToday(day)} ${setPastDay(day)}
+                `}
+              >
+                {day !== null && (
+                  <Link href={`/${day}`} className="h-full flex flex-col">
+                    <span
+                      className={`text-right font-semibold ${setDayColor(
+                        index % 7
+                      )}`}
+                    >
+                      {day}
+                    </span>
+                    <div className="mt-auto pb-2 pl-0.5 text-xs md:text-sm">
+                      <span className="font-medium whitespace-pre-line">
+                        {getChapter(day)}
+                      </span>
+                    </div>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
 }
-
-// (
-//   <div key={i} className="table-cell border w-20 p-1 h-[16vh]">{col ? col : ''}
-//     {col ?
-//       <div className="border w-full text-center">{`출애굽기 ${col}장`}</div> : null}
-//   </div>
-// )
