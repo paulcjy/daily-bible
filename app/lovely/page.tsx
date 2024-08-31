@@ -11,7 +11,7 @@ export default function Home() {
       <div className="h-[6vh] text-2xl sm:text-4xl text-center align-middle">
         7월
       </div> */}
-      <Calendar />
+      <LovelyCalendar />
     </div>
   )
 }
