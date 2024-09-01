@@ -1,3 +1,4 @@
+import Comments from '@/components/Comments'
 import { Bible, allBibles } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
 
@@ -11,9 +12,12 @@ export default function BiblePage({ params }: { params: { day: string } }) {
   if (!bible) notFound()
 
   return (
-    <div
-      className="markdown pr-4 pl-6 mb-16 -mt-4"
-      dangerouslySetInnerHTML={{ __html: bible.body.html }}
-    />
+    <>
+      <div
+        className="markdown pr-4 pl-6 mb-16 -mt-4"
+        dangerouslySetInnerHTML={{ __html: bible.body.html }}
+      />
+      <Comments pageId={params.day} />
+    </>
   )
 }
