@@ -1,5 +1,5 @@
 import Comments from '@/components/Comments'
-import { Bible, allBibles } from 'contentlayer/generated'
+import { allBibles } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
 
 export const generateStaticParams = async () =>

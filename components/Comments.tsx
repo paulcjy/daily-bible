@@ -1,39 +1,70 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, FormEventHandler, FormEvent } from 'react'
 import { db, auth } from '../firebase'
 import { ref, push, onValue, remove } from 'firebase/database'
 import { signInAnonymously } from 'firebase/auth'
-import { MessageSquare, Send, Trash2 } from 'lucide-react'
+import { MessageSquare, Send } from 'lucide-react'
 
-export default function Comments2({ pageId }) {
-  const [comments, setComments] = useState([])
+interface Comment {
+  id?: string
+  author: string
+  content: string
+  timestamp: number
+}
+
+export default function Comments({ pageId }: { pageId: string }) {
+  const [comments, setComments] = useState<Comment[]>([])
   const [newComment, setNewComment] = useState('')
   const [authorName, setAuthorName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    // 익명 인증
+    signInAnonymously(auth).catch((error) => {
+      console.error('Anonymous auth error:', error)
+    })
+
+    // 댓글 불러오기
     const commentsRef = ref(db, `comments/${pageId}`)
-    onValue(commentsRef, (snapshot) => {
+    const unsubscribe = onValue(commentsRef, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        const commentList = Object.entries(data).map(([key, value]) => ({
-          id: key,
-          ...value,
-        }))
+        const commentList = Object.entries(data).map(
+          ([key, value]: [string, any]) => ({
+            id: key,
+            ...value,
+          })
+        )
         setComments(commentList.sort((a, b) => b.timestamp - a.timestamp))
       } else {
         setComments([])
       }
     })
+
+    return () => unsubscribe()
+
+    // const commentsRef = ref(db, `comments/${pageId}`)
+    // onValue(commentsRef, (snapshot) => {
+    //   const data: { [id: string]: Comment } = snapshot.val()
+    //   if (data) {
+    //     const commentList = Object.entries(data).map(([key, value]) => ({
+    //       id: key,
+    //       ...value,
+    //     }))
+    //     setComments(commentList.sort((a, b) => b.timestamp - a.timestamp))
+    //   } else {
+    //     setComments([])
+    //   }
+    // })
   }, [pageId])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (
+    e: FormEvent
+  ) => {
     e.preventDefault()
     if (!newComment.trim() || !authorName.trim()) return
 
-    setIsLoading(true)
     try {
-      await signInAnonymously(auth)
       const commentsRef = ref(db, `comments/${pageId}`)
       await push(commentsRef, {
         author: authorName.trim(),
@@ -41,15 +72,33 @@ export default function Comments2({ pageId }) {
         timestamp: Date.now(),
       })
       setNewComment('')
-      // 작성자 이름은 유지합니다.
+      // authorName은 유지
     } catch (error) {
       console.error('Error posting comment:', error)
-    } finally {
-      setIsLoading(false)
     }
+
+    // e.preventDefault()
+    // if (!newComment.trim() || !authorName.trim()) return
+
+    // setIsLoading(true)
+    // try {
+    //   await signInAnonymously(auth)
+    //   const commentsRef = ref(db, `comments/${pageId}`)
+    //   await push(commentsRef, {
+    //     author: authorName.trim(),
+    //     content: newComment.trim(),
+    //     timestamp: Date.now(),
+    //   })
+    //   setNewComment('')
+    //   // 작성자 이름은 유지합니다.
+    // } catch (error) {
+    //   console.error('Error posting comment:', error)
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (commentId: number) => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
       try {
         const commentRef = ref(db, `comments/${pageId}/${commentId}`)
@@ -100,7 +149,7 @@ export default function Comments2({ pageId }) {
         </div>
       </form>
       <div className="space-y-4">
-        {comments.map((comment) => (
+        {comments.map((comment: Comment) => (
           <div key={comment.id} className="bg-gray-100 p-4 rounded-lg">
             <div className="font-bold mb-2">{comment.author}</div>
             <p className="mb-2">{comment.content}</p>
