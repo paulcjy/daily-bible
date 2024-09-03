@@ -71,6 +71,16 @@ jobs:
       - name: Add export configuration
         run: sed -i 's/\/\/ //g' next.config.mjs
       - name: Build with Next.js
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          APP_ID: ${{ secrets.APP_ID }}
+          AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          MEASUREMENT_ID: ${{ secrets.MEASUREMENT_ID }}
+          MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
+          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
