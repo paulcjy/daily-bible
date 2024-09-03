@@ -3,7 +3,6 @@ import { withContentlayer } from 'next-contentlayer'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: '/daily-bible',
-  // output: 'export'
   env: {
     API_KEY: process.env.API_KEY,
     AUTH_DOMAIN: process.env.AUTH_DOMAIN,
@@ -15,6 +14,7 @@ const nextConfig = {
     DATABASE_URL: process.env.DATABASE_URL,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
   },
+  // output: 'export'
 }
 
 export default withContentlayer(nextConfig)
