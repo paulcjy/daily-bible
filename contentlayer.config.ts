@@ -2,13 +2,13 @@ import { defineDocumentType, makeSource } from 'contentlayer/source-files'
 
 export const Bible = defineDocumentType(() => ({
   name: 'Bible',
-  filePathPattern: `**/*.md`,
+  filePathPattern: `[0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9].md`,
   fields: {},
   computedFields: {
-    day: {
+    date: {
       type: 'string',
-      resolve: (day) => day._raw.flattenedPath
-    }
+      resolve: (bible) => bible._raw.flattenedPath.split('-')[0],
+    },
   },
 }))
 
