@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 import { allBibles } from 'contentlayer/generated'
-import { Month } from './calendar/types'
+import { Day, Month } from './calendar/types'
 
 export const LovelyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -69,7 +69,7 @@ export const LovelyCalendar = () => {
     updateCalendar()
   }, [currentDate])
 
-  const getDateStyle = (day) => {
+  const getDateStyle = (day: Day) => {
     if (!day) return ''
 
     const date = day.date
@@ -91,7 +91,7 @@ export const LovelyCalendar = () => {
     return styles.join(' ')
   }
 
-  const changeMonth = (delta) => {
+  const changeMonth = (delta: number) => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + delta, 1)
     )
