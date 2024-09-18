@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { useState, useEffect, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 import { allBibles } from 'contentlayer/generated'
+import { Month } from './calendar/types'
 
 export const LovelyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [calendar, setCalendar] = useState([])
+  const [calendar, setCalendar] = useState<Month>([])
 
   const today = useMemo(() => new Date(), [])
 
