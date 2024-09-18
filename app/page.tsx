@@ -1,5 +1,4 @@
-import { Calendar } from '@/components/Calendar'
-import { LovelyCalendar } from '@/components/LovelyCalendar'
+import { Calendar } from '@/components/calendar/Calendar'
 
 export default function Home() {
   return (

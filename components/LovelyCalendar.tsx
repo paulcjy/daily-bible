@@ -1,67 +1,17 @@
 'use client'
+
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react'
+import { allBibles } from 'contentlayer/generated'
 
 export const LovelyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [calendarDays, setCalendarDays] = useState<(number | null)[][]>([])
+  const [calendar, setCalendar] = useState([])
+
+  const today = useMemo(() => new Date(), [])
 
   const header = ['일', '월', '화', '수', '목', '금', '토']
-
-  useEffect(() => {
-    const updateCalendar = () => {
-      const year = currentDate.getFullYear()
-      const month = currentDate.getMonth()
-      const firstDay = new Date(year, month, 1).getDay()
-      const lastDate = new Date(year, month + 1, 0).getDate()
-
-      let days: (number | null)[][] = []
-      let week: (number | null)[] = Array(7).fill(null)
-
-      for (let i = 0; i < firstDay; i++) {
-        week[i] = null
-      }
-
-      for (let day = 1; day <= lastDate; day++) {
-        const weekDay = (firstDay + day - 1) % 7
-        week[weekDay] = day
-
-        if (weekDay === 6 || day === lastDate) {
-          days.push(week)
-          week = Array(7).fill(null)
-        }
-      }
-
-      setCalendarDays(days)
-    }
-
-    updateCalendar()
-  }, [currentDate])
-
-  const getToday = () => {
-    const now = new Date()
-    return now.getFullYear() === currentDate.getFullYear() &&
-      now.getMonth() === currentDate.getMonth()
-      ? now.getDate()
-      : -1
-  }
-
-  const setDayColor = (idx: number) =>
-    `${idx === 0 ? 'text-red-400' : ''} ${idx === 6 ? 'text-blue-400' : ''}`
-
-  const setToday = (day: number | null) =>
-    day === getToday() ? 'bg-pink-100 border-pink-300' : ''
-
-  const setPastDay = (day: number | null) =>
-    day && day < getToday() ? 'opacity-50' : ''
-
-  const getChapter = (day: number) => {
-    const end = day * 3
-    const begin = end - 2
-    return `시편\n${begin}-${end}`
-  }
-
   const monthNames = [
     '1월',
     '2월',
@@ -77,7 +27,70 @@ export const LovelyCalendar = () => {
     '12월',
   ]
 
-  const changeMonth = (delta: number) => {
+  useEffect(() => {
+    const updateCalendar = () => {
+      const year = currentDate.getFullYear()
+      const month = currentDate.getMonth()
+      const firstDay = new Date(year, month, 1).getDay()
+      const lastDay = new Date(year, month + 1, 0).getDate()
+
+      const monthlyBible = allBibles.filter((bible) => {
+        return bible.year === year && bible.month === month + 1
+      })
+
+      let calendar = [Array(7).fill(null)]
+
+      for (let date = 1; date <= lastDay; date++) {
+        const index = firstDay + date - 1
+        const day = index % 7
+        const week = Math.floor(index / 7)
+
+        const currentDate = new Date(year, month, date)
+        const dailyBible = monthlyBible.find((bible) => bible.day === date)
+
+        const dayData = {
+          date: currentDate,
+          content: dailyBible
+            ? {
+                url: `/${dailyBible.date}`,
+                title: dailyBible.title,
+              }
+            : null,
+        }
+
+        if (!calendar[week]) calendar.push(Array(7).fill(null))
+        calendar[week][day] = dayData
+      }
+
+      setCalendar(calendar)
+    }
+
+    updateCalendar()
+  }, [currentDate])
+
+  const getDateStyle = (day) => {
+    if (!day) return ''
+
+    const date = day.date
+    date.setHours(0, 0, 0, 0)
+    today.setHours(0, 0, 0, 0)
+
+    const isPast = date < today
+    const isToday = date.getTime() === today.getTime()
+    const isSunday = date.getDay() === 0
+    const isSaturday = date.getDay() === 6
+
+    const styles = ['hover:shadow-md transition-shadow hover:border-pink-300']
+
+    if (isPast) styles.push('opacity-50')
+    if (isToday) styles.push('bg-pink-100 border-pink-300')
+    if (isSunday) styles.push('text-red-400')
+    if (isSaturday) styles.push('text-blue-400')
+
+    return styles.join(' ')
+  }
+
+  const changeMonth = (delta) => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + delta, 1)
     )
@@ -127,7 +140,9 @@ export const LovelyCalendar = () => {
                 {header.map((day, i) => (
                   <div
                     key={i}
-                    className={`text-center font-bold p-1 ${setDayColor(i)}`}
+                    className={`text-center font-bold p-1 ${
+                      i === 0 ? 'text-red-400' : ''
+                    } ${i === 6 ? 'text-blue-400' : ''}`}
                   >
                     {day}
                   </div>
@@ -135,31 +150,25 @@ export const LovelyCalendar = () => {
               </div>
 
               <div className="grid grid-cols-7 gap-0">
-                {calendarDays.flat().map((day, index) => (
+                {calendar.flat().map((day, index) => (
                   <div
                     key={index}
                     className={`
                       border-2 rounded-md p-1 h-24 md:h-32
-                      ${
-                        day
-                          ? 'hover:shadow-md transition-shadow hover:border-pink-300'
-                          : ''
-                      }
-                      ${setToday(day)} ${setPastDay(day)}
+                      ${day ? getDateStyle(day) : ''}
                     `}
                   >
-                    {day !== null && (
-                      <Link href={`/${day}`} className="h-full flex flex-col">
-                        <span
-                          className={`text-right font-semibold ${setDayColor(
-                            index % 7
-                          )}`}
-                        >
-                          {day}
+                    {day && (
+                      <Link
+                        href={day.content?.url || '#'}
+                        className="h-full flex flex-col"
+                      >
+                        <span className="text-right font-semibold">
+                          {day.date.getDate()}
                         </span>
                         <div className="mt-auto pb-2 pl-0.5 text-xs md:text-sm">
                           <span className="font-medium whitespace-pre-line text-pink-600">
-                            {getChapter(day)}
+                            {day.content?.title || ''}
                           </span>
                         </div>
                       </Link>
