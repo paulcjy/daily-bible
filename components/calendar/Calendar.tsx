@@ -1,12 +1,13 @@
 'use client'
-import { useMemo, useState, useCallback } from 'react'
-import { BibleData } from './types'
+import { useMemo, useState, useCallback, useEffect } from 'react'
+import { BibleData, DayData } from './types'
 import { CalendarHeader } from './CalendarHeader'
 import { CalendarNav } from './CalendarNav'
 import { CalendarGrid } from './CalendarGrid'
 
 export const Calendar = ({ bibleData }: { bibleData: BibleData }) => {
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [calendar, setCalendar] = useState<DayData[]>([])
   const [today, setToday] = useState(new Date())
 
   const createCalendar = useCallback(
@@ -54,10 +55,10 @@ export const Calendar = ({ bibleData }: { bibleData: BibleData }) => {
     [bibleData, today]
   )
 
-  const calendar = useMemo(
-    () => createCalendar(currentDate),
-    [currentDate, createCalendar]
-  )
+  useEffect(() => {
+    const calendar = createCalendar(currentDate)
+    setCalendar(calendar)
+  }, [currentDate])
 
   const changeMonth = useCallback((d: number) => {
     setCurrentDate(
