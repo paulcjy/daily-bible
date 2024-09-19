@@ -1,16 +1,14 @@
-export interface DayContent {
-  url: string
-  title: string
+export interface BibleData {
+  [year: number]: {
+    [month: number]: {
+      [day: number]: DayData
+    }
+  }
 }
 
-export interface DayData {
-  date: Date
-  style: string
-  content: DayContent | null
-}
-
-export type Day = DayData | null
-
-export type Week = Day[]
-
-export type Month = Week[]
+export type DayData = {
+  day: number
+  url?: string
+  title?: string
+  style?: string
+} | null

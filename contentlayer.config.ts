@@ -21,7 +21,7 @@ const createPathParser = () => {
     const [year, month, day] = date.split('/').map(Number)
     const title = splitTitle.join('\n')
 
-    const result = { date, year, month, day, title }
+    const result = { date, year, month: month - 1, day, title }
 
     cache.set(path, result)
     return result

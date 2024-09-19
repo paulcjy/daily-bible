@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { getCalendarMonthTitle } from './utils'
+import { useCallback } from 'react'
 
 export const CalendarNav = ({
   currentDate,
@@ -8,6 +8,11 @@ export const CalendarNav = ({
   currentDate: Date
   onChangeMonth: (d: number) => void
 }) => {
+  const getCalendarMonthTitle = useCallback(
+    (date: Date) => `${date.getFullYear()}년  ${date.getMonth() + 1}월`,
+    []
+  )
+
   return (
     <div className="flex justify-between items-center p-2 bg-blue-500 text-white">
       <button

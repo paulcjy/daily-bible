@@ -1,9 +1,15 @@
-import { Day, Month } from './types'
+import { DayData } from './types'
 import { CalendarDay } from './CalendarDay'
 import { WEEKDAYS } from './constants'
-import { getDayColor } from './utils'
+import { useCallback } from 'react'
 
-export const CalendarGrid = ({ calendar }: { calendar: Month }) => {
+export const CalendarGrid = ({ calendar }: { calendar: DayData[] }) => {
+  const getDayColor = useCallback((day: number): string => {
+    if (day === 0) return 'text-red-500'
+    if (day === 6) return 'text-blue-600'
+    return ''
+  }, [])
+
   return (
     <div className="p-1.5">
       <div className="grid grid-cols-7 gap-0 mb-1">
@@ -17,8 +23,8 @@ export const CalendarGrid = ({ calendar }: { calendar: Month }) => {
         ))}
       </div>
       <div className="grid grid-cols-7 gap-0">
-        {calendar.flat().map((day: Day, i: number) => (
-          <CalendarDay key={i} day={day} />
+        {calendar.map((dayData, i: number) => (
+          <CalendarDay key={i} dayData={dayData} />
         ))}
       </div>
     </div>
