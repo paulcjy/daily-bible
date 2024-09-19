@@ -1,12 +1,13 @@
 'use client'
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 import { BibleData, DayData } from './calendar/types'
 
 export const LovelyCalendar = ({ bibleData }: { bibleData: BibleData }) => {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const today = useMemo(() => new Date(), [])
+  const [calendar, setCalendar] = useState<DayData[]>([])
+  const [today, setToday] = useState(new Date())
 
   const CALENDAR_TITLE = '주내힘교회 청소년부'
   const CALENDAR_SUBTITLE = '성경읽기표'
@@ -73,10 +74,10 @@ export const LovelyCalendar = ({ bibleData }: { bibleData: BibleData }) => {
     [bibleData, today]
   )
 
-  const calendar = useMemo(
-    () => createCalendar(currentDate),
-    [currentDate, createCalendar]
-  )
+  useEffect(() => {
+    const calendar = createCalendar(currentDate)
+    setCalendar(calendar)
+  }, [currentDate])
 
   const changeMonth = useCallback((d: number) => {
     setCurrentDate(
