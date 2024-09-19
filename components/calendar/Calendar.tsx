@@ -6,7 +6,7 @@ import { CalendarNav } from './CalendarNav'
 import { CalendarGrid } from './CalendarGrid'
 
 export const Calendar = ({ bibleData }: { bibleData: BibleData }) => {
-  const [currentDate, setCurrentDate] = useState(() => new Date())
+  const [currentDate, setCurrentDate] = useState(new Date())
   const today = useMemo(() => new Date(), [])
 
   const createCalendar = useCallback(

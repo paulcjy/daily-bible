@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Heart } from 'lucide-react'
 import { BibleData, DayData } from './calendar/types'
 
 export const LovelyCalendar = ({ bibleData }: { bibleData: BibleData }) => {
-  const [currentDate, setCurrentDate] = useState(() => new Date())
+  const [currentDate, setCurrentDate] = useState(new Date())
   const today = useMemo(() => new Date(), [])
 
   const CALENDAR_TITLE = '주내힘교회 청소년부'
