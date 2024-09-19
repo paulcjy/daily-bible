@@ -11,25 +11,6 @@ export const Calendar = ({ bibleData }: { bibleData: BibleData }) => {
 
   const createCalendar = useCallback(
     (date: Date) => {
-      const getDayStyle = (date: Date, today: Date) => {
-        date.setHours(0, 0, 0, 0)
-        today.setHours(0, 0, 0, 0)
-
-        const isPast = date < today
-        const isToday = !(date.getTime() - today.getTime())
-        const isSunday = date.getDay() === 0
-        const isSaturday = date.getDay() === 6
-
-        const styles = ['hover:shadow-md transition-shadow']
-
-        if (isPast) styles.push('opacity-50')
-        if (isToday) styles.push('bg-blue-100 border-blue-500')
-        if (isSunday) styles.push('text-red-500')
-        if (isSaturday) styles.push('text-blue-600')
-
-        return styles.join(' ')
-      }
-
       const year = date.getFullYear()
       const month = date.getMonth()
       const monthlyBible = bibleData[year]?.[month] ?? {}
@@ -74,4 +55,23 @@ export const Calendar = ({ bibleData }: { bibleData: BibleData }) => {
       </div>
     </div>
   )
+}
+
+const getDayStyle = (date: Date, today: Date) => {
+  date.setHours(0, 0, 0, 0)
+  today.setHours(0, 0, 0, 0)
+
+  const isPast = date < today
+  const isToday = !(date.getTime() - today.getTime())
+  const isSunday = date.getDay() === 0
+  const isSaturday = date.getDay() === 6
+
+  const styles = ['hover:shadow-md transition-shadow']
+
+  if (isPast) styles.push('opacity-50')
+  if (isToday) styles.push('bg-blue-100 border-blue-500')
+  if (isSunday) styles.push('text-red-500')
+  if (isSaturday) styles.push('text-blue-600')
+
+  return styles.join(' ')
 }
