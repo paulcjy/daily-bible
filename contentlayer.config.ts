@@ -18,16 +18,10 @@ const createPathParser = () => {
 
     const [date, ...splitTitle] = path.split('_')
 
-    const [year, month, day] = date.split('/')
+    const [year, month, day] = date.split('/').map(Number)
     const title = splitTitle.join('\n')
 
-    const result = {
-      date,
-      year: Number(year),
-      month: Number(month),
-      day: Number(day),
-      title,
-    }
+    const result = { date, year, month, day, title }
 
     cache.set(path, result)
     return result
@@ -38,7 +32,7 @@ const pathParser = createPathParser()
 
 export const Bible = defineDocumentType(() => ({
   name: 'Bible',
-  filePathPattern: `[0-9][0-9][0-9][0-9]/[0-9][0-9]/*.md`,
+  filePathPattern: `[0-9][0-9][0-9][0-9]/([0-9]|[0-9][0-9])/*.md`,
   fields: {},
   computedFields: {
     date: {
